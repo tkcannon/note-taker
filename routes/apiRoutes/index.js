@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { v4: uuid } = require('uuid');
 
 const notes = require('../../db/db.json');
 const createNote = require('../../lib/notes.js')
@@ -8,7 +9,9 @@ router.get('/notes', (req, res) => {
 })
 
 router.post('/notes', (req, res) => {
-    createNote(req.body, notes);
+    note = req.body;
+    note.id = uuid();
+    createNote(note, notes);
     res.json({ message: 'note created' });
 })
 
