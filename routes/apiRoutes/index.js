@@ -1,22 +1,26 @@
 const router = require('express').Router();
-const { v4: uuid } = require('uuid');
-
-const notes = require('../../db/db.json');
-const { createNote, deleteNote } = require('../../lib/notes.js')
+const { getNotes, createNote, deleteNote } = require('../../lib/notes.js');
 
 router.get('/notes', (req, res) => {
+    notes = getNotes();
     res.json(notes);
 })
 
 router.post('/notes', (req, res) => {
-    note = req.body;
-    note.id = uuid();
-    createNote(note, notes);
-    res.json({ message: 'note created' });
+    if (!req.body.title || !req.body.text) {
+        res.json({ message: 'Missing note data' });
+    }
+
+    noteCreated = createNote(req.body);
+
+    res.json({ note: noteCreated });
 })
 
-router.delete('/nodes/:id', (req, res) => {
-    id = req.params.id;
+router.delete('/notes/:id', (req, res) => {
+    const id = req.params.id;
+    const deletedNote = deleteNote(id);
+
+    res.json({ deletedNote: deletedNote });
 })
 
 module.exports = router;
